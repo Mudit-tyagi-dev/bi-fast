@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg0:#080b18;--bg1:#0e1226;--bg2:#141830;--bg3:#1c2140;--bg4:#242850;
+  --accent:#6c63ff;--accentd:rgba(108,99,255,.15);--accent2:#a78bfa;
+  --green:#10d9a0;--yellow:#f59e0b;--red:#f87171;--orange:#fb923c;
+  --t1:#dde1f5;--t2:#8890be;--t3:#464e7a;
+  --border:#1a1f3a;--border2:#22284a;
+  --r4:4px;--r8:8px;--r12:12px;--r16:16px;--r20:20px;
+  --font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+html,body,#root{height:100%;width:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--bg0);color:var(--t1);font-size:14px;-webkit-font-smoothing:antialiased}
+button{font-family:var(--font);cursor:pointer}
+code,pre{font-family:var(--mono)}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:4px}

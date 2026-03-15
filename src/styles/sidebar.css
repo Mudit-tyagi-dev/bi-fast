@@ -1,0 +1,39 @@
+.sidebar{width:242px;min-width:242px;height:100vh;background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:17px 15px 15px;border-bottom:1px solid var(--border);flex-shrink:0}
+.logo-box{width:30px;height:30px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-text{font-size:17px;font-weight:600;color:var(--t1);letter-spacing:-.01em}
+.logo-text em{font-style:normal;color:var(--accent2)}
+.srv-dot{width:7px;height:7px;border-radius:50%;margin-left:auto;background:var(--t3);flex-shrink:0;transition:background .3s}
+.srv-ok{background:var(--green)}.srv-error{background:var(--red)}
+.sb-label{padding:13px 15px 5px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);flex-shrink:0}
+.sb-chats-hd{display:flex;align-items:center;justify-content:space-between;padding-right:10px}
+.sb-nav{display:flex;flex-direction:column;gap:1px;padding:0 7px;flex-shrink:0}
+.nav-btn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r8);background:none;border:none;color:var(--t2);font-size:13px;font-weight:400;text-align:left;width:100%;transition:all .15s}
+.nav-btn:hover{background:var(--bg2);color:var(--t1)}
+.nav-btn.active{background:var(--accentd);color:var(--accent2)}
+.nav-ico{width:15px;height:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.75}
+.nav-ico svg{width:15px;height:15px}
+.new-btn{display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--accent);border:none;border-radius:20px;color:white;font-size:11px;font-weight:500;transition:background .15s}
+.new-btn:hover{background:#5550d4}
+.chat-list{flex:1;overflow-y:auto;padding:3px 7px;display:flex;flex-direction:column;gap:1px}
+.chat-empty{padding:10px 8px;font-size:12px;color:var(--t3);font-style:italic}
+.chat-row{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:var(--r8);cursor:pointer;color:var(--t2);font-size:12.5px;transition:all .15s}
+.chat-row:hover{background:var(--bg2);color:var(--t1)}
+.chat-row:hover .del-btn{opacity:1}
+.chat-row.active{background:rgba(108,99,255,.1);color:var(--accent2)}
+.chat-ico{width:13px;height:13px;flex-shrink:0;opacity:.5}
+.chat-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.del-btn{background:none;border:none;color:var(--t3);opacity:0;padding:2px;border-radius:4px;display:flex;align-items:center;transition:all .15s;flex-shrink:0}
+.del-btn:hover{color:var(--red);background:rgba(248,113,113,.1)}
+.sb-footer{border-top:1px solid var(--border);padding:11px;flex-shrink:0}
+.user-chip{display:flex;align-items:center;gap:9px;padding:8px;background:var(--bg2);border-radius:var(--r8)}
+.user-av{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:white;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:12.5px;font-weight:500;color:var(--t1)}
+.user-role{font-size:10.5px;color:var(--t3)}
+.gear-btn{background:none;border:none;color:var(--t3);padding:3px;border-radius:5px;display:flex;align-items:center;transition:all .15s;flex-shrink:0}
+.gear-btn:hover{color:var(--t1);background:var(--bg3)}
+.key-row{display:flex;align-items:center;gap:5px;margin-top:7px;padding:0 3px}
+.key-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.key-set{background:var(--green)}.key-unset{background:var(--red)}
+.key-text{font-size:11px;color:var(--t3)}
