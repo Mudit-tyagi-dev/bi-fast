@@ -3,60 +3,58 @@ import "./styles/global.css";
 import "./styles/app.css";
 import { useDashboard } from "./hooks/useDashboard";
 import Sidebar from "./components/Sidebar";
-import ChatMessages, { ChartBlock } from "./components/ChatMessages";
+import ChatMessages from "./components/ChatMessages";
+import DashboardBlock from "./components/dashboard";
 import PromptBar from "./components/PromptBar";
 import GeminiKeyModal from "./components/GeminiKeyModal";
 
+const DUMMY_DASHBOARD = {
+  data: {
+    labels: ["Vlogs", "Tech Reviews", "Music", "Education", "Gaming"],
+    values: [2988200, 2973890, 2979371, 1854320, 1632100],
+    x_axis: "Category",
+    y_axis: "Total Views",
+  },
+  query: "Sample: Top 5 categories by total views",
+  explanation: "This is a preview dashboard. Ask a question below to generate your own insights from the data.",
+};
+
 export default function App() {
   const {
-    rooms,
-    currentRoomId,
-    messages,
-    geminiKey,
-    serverStatus,
-    wsStatus,
-    streamingText,
-    showKeyModal,
-    setShowKeyModal,
-    saveGeminiKey,
-    switchRoom,
-    newChat,
-    removeRoom,
-    sendMessage,
+    rooms, currentRoomId, messages,
+    geminiKey, serverStatus, wsStatus, streamingText,
+    showKeyModal, setShowKeyModal,
+    saveGeminiKey, switchRoom, newChat, removeRoom, sendMessage,
   } = useDashboard();
 
   const [activeNav, setActiveNav] = useState("overview");
   const [mode, setMode] = useState("query");
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chartOpen, setChartOpen] = useState(false);
   const [chartMessages, setChartMessages] = useState([]);
   const isStreaming = streamingText !== null;
 
+  // Auto open chat when message comes
   useEffect(() => {
-    if (mode !== "chart") return;
+    if (messages.length > 0) setChatOpen(true);
+  }, [messages.length]);
+
+  // Chart messages sync
+  useEffect(() => {
     const lastMsg = messages[messages.length - 1];
     if (!lastMsg) return;
-    if (
-      lastMsg.role === "assistant" ||
-      lastMsg.type === "chart" ||
-      lastMsg.role === "error"
-    ) {
-      setChartMessages((prev) => {
-        const already = prev.find((m) => m.ts === lastMsg.ts);
+    if (lastMsg.type === "dashboard" || lastMsg.type === "chart" || lastMsg.role === "assistant" || lastMsg.role === "error") {
+      setChartMessages(prev => {
+        const already = prev.find(m => m.ts === lastMsg.ts);
         if (already) return prev;
         return [...prev, lastMsg];
       });
     }
-  }, [messages, mode]);
-
-  function onModeToggle() {
-    setMode((prev) => (prev === "query" ? "chart" : "query"));
-  }
+  }, [messages]);
 
   function handleSend(text) {
     if (mode === "chart") {
-      setChartMessages((prev) => [
-        ...prev,
-        { role: "user", content: text, ts: Date.now() },
-      ]);
+      setChartMessages(prev => [...prev, { role: "user", content: text, ts: Date.now() }]);
       sendMessage(text, "chart");
     } else {
       sendMessage(text, "query");
@@ -64,18 +62,16 @@ export default function App() {
   }
 
   function handleExport() {
-    if (!messages.length) {
-      alert("No messages to export.");
-      return;
-    }
-    const txt = messages
-      .map((m) => `[${m.role.toUpperCase()}]\n${m.content}`)
-      .join("\n\n---\n\n");
+    if (!messages.length) { alert("No messages to export."); return; }
+    const txt = messages.map(m => `[${m.role.toUpperCase()}]\n${m.content}`).join("\n\n---\n\n");
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([txt], { type: "text/plain" }));
     a.download = `pulsebi-${currentRoomId || "chat"}.txt`;
     a.click();
   }
+
+  const latestDashboard = [...messages].reverse().find(m => m.type === "dashboard");
+  const displayDashboard = latestDashboard || DUMMY_DASHBOARD;
 
   return (
     <div className="app">
@@ -93,6 +89,7 @@ export default function App() {
       />
 
       <div className="main">
+        {/* Topbar */}
         <div className="topbar">
           <div className="tb-left">
             <span className="tb-tag">AI-Powered Insights</span>
@@ -102,85 +99,125 @@ export default function App() {
             </div>
           </div>
           <div className="tb-right">
-            <button className="tb-btn" onClick={handleExport}>
-              Export
+            <button
+              className={`tb-btn chat-toggle-btn ${chatOpen ? "active" : ""}`}
+              onClick={() => setChatOpen(prev => !prev)}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+              </svg>
+              {chatOpen ? "Close Chat" : "Chat"}
             </button>
             <button
-              className="tb-btn key"
-              onClick={() => setShowKeyModal(true)}
+              className={`tb-btn chart-toggle-btn ${chartOpen ? "active" : ""}`}
+              onClick={() => { setChartOpen(prev => !prev); setMode(chartOpen ? "query" : "chart"); }}
             >
-              API Key
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M3 9h18M9 21V9"/>
+              </svg>
+              {chartOpen ? "Close Chart" : "Chart Mode"}
             </button>
+            <button className="tb-btn" onClick={handleExport}>Export</button>
+            <button className="tb-btn key" onClick={() => setShowKeyModal(true)}>API Key</button>
           </div>
         </div>
 
-        <div className="chat-panel">
-          <div
-            className={`chat-messages-wrap ${mode === "chart" ? "minimized" : ""}`}
-          >
-            <ChatMessages
-              messages={messages}
-              streamingText={streamingText}
-              onChipClick={handleSend}
+        {/* Content area */}
+        <div className="content-area">
+
+          {/* Dashboard panel — always visible */}
+          <div className={`dashboard-panel ${chatOpen || chartOpen ? "with-panel" : ""}`}>
+            <div className="dashboard-scroll">
+              <div className="mode-bar">
+                <div className="mode-bar-left">
+                  <span className="mode-bar-title">
+                    {latestDashboard ? "Dashboard" : "Preview Dashboard"}
+                  </span>
+                  <span className="mode-bar-sub">
+                    {latestDashboard ? "Latest result" : "Ask a question to generate your own"}
+                  </span>
+                </div>
+              </div>
+
+              <DashboardBlock
+                data={displayDashboard.data}
+                query={displayDashboard.query}
+                explanation={displayDashboard.explanation}
+              />
+            </div>
+
+            <PromptBar
+              onSend={handleSend}
+              isStreaming={isStreaming}
+              wsStatus={wsStatus}
+              currentRoomId={currentRoomId}
+              geminiKey={geminiKey}
+              onOpenKeyModal={() => setShowKeyModal(true)}
+              mode={mode}
+              onModeToggle={() => setMode(prev => prev === "query" ? "chart" : "query")}
             />
           </div>
 
-          {mode === "chart" && (
-            <div className="chart-fullscreen">
-              <div className="chart-top-btns">
-                <button
-                  className="chart-close-btn"
-                  onClick={() => setMode("query")}
-                >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
+          {/* Chat drawer */}
+          {chatOpen && (
+            <div className="chat-drawer">
+              <div className="chat-drawer-head">
+                <span className="chat-drawer-title">Conversation</span>
+                <button className="chat-drawer-close" onClick={() => setChatOpen(false)}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
                   </svg>
-                  Close Chart
-                </button>
-                <button
-                  className="chart-clear-btn"
-                  onClick={() => setChartMessages([])}
-                >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <polyline points="3 6 5 6 21 6" />
-                    <path d="M19 6l-1 14H6L5 6" />
-                    <path d="M10 11v6M14 11v6" />
-                  </svg>
-                  Clear Chat
                 </button>
               </div>
-              <div className="chart-area">
+              <div className="chat-drawer-body">
+                <ChatMessages
+                  messages={messages}
+                  streamingText={streamingText}
+                  onChipClick={handleSend}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Chart fullscreen panel */}
+          {chartOpen && (
+            <div className="chart-drawer">
+              <div className="chat-drawer-head">
+                <span className="chat-drawer-title">Chart Mode</span>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <button
+                    className="chart-clear-btn"
+                    onClick={() => setChartMessages([])}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6l-1 14H6L5 6"/>
+                    </svg>
+                    Clear
+                  </button>
+                  <button className="chat-drawer-close" onClick={() => { setChartOpen(false); setMode("query"); }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <line x1="18" y1="6" x2="6" y2="18"/>
+                      <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div className="chart-drawer-body" style={{ overflowY: 'auto', padding: '16px' }}>
                 {chartMessages.length === 0 ? (
-                  <p className="chart-empty">
-                    Chart mode active — ask a chart question below
-                  </p>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--t3)', fontSize: '14px' }}>
+                    Ask a chart question below
+                  </div>
                 ) : (
                   <div className="chart-messages-list">
                     {chartMessages.map((m, i) => (
-                      <div
-                        key={i}
-                        className={`chart-msg ${m.role === "user" ? "chart-msg-user" : "chart-msg-ai"}`}
-                      >
-                        {m.type === "chart" ? (
-                          <ChartBlock data={m.data} />
-                        ) : (
-                          <p>{m.content ?? m.data}</p>
-                        )}
+                      <div key={i} className={`chart-msg ${m.role === "user" ? "chart-msg-user" : "chart-msg-ai"}`}>
+                        {m.type === "dashboard"
+                          ? <DashboardBlock data={m.data} query={m.query} explanation={m.explanation} />
+                          : <p>{m.content ?? m.data}</p>
+                        }
                       </div>
                     ))}
                   </div>
@@ -189,16 +226,6 @@ export default function App() {
             </div>
           )}
 
-          <PromptBar
-            onSend={handleSend}
-            isStreaming={isStreaming}
-            wsStatus={wsStatus}
-            currentRoomId={currentRoomId}
-            geminiKey={geminiKey}
-            onOpenKeyModal={() => setShowKeyModal(true)}
-            mode={mode}
-            onModeToggle={onModeToggle}
-          />
         </div>
       </div>
 
