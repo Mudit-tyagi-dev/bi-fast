@@ -44,20 +44,15 @@ export default function GeminiKeyModal({ currentKey, onSave, onClose }) {
         />
         {err && <p className="modal-err">{err}</p>}
 
-        <div className="modal-note">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          Sent to <code>POST /config/rooms/&#123;id&#125;</code>. Never stored on server.
-        </div>
+        
 
         <div className="modal-actions">
-          <button className="btn-primary" onClick={handleSave} disabled={saving}>
-            {saving ? 'Saving…' : 'Save & Connect'}
-          </button>
           {currentKey && (
             <button className="btn-secondary" onClick={onClose}>Cancel</button>
           )}
+          <button className="btn-primary" onClick={handleSave} disabled={saving}>
+            {saving ? 'Saving…' : 'Save & Connect'}
+          </button>
         </div>
       </div>
     </div>

@@ -106,7 +106,7 @@ export function useDashboard() {
   }, []);
 
   const newChat = useCallback(async () => {
-    const room = createRoom("New Chat");
+    const room = createRoom("New Dashboard");
     refreshRooms();
 
     if (geminiKey) {

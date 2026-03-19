@@ -182,15 +182,7 @@ export default function DashboardBlock({ data, query, explanation }) {
 
   return (
     <div className="dashboard-block">
-      <div className="dash-query-row">
-        <div className="dash-query-icon">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-          </svg>
-        </div>
-        <div className="dash-query-text">"{query}"</div>
-        <div className="dash-badge">AI Generated</div>
-      </div>
+      
 
       <div className="kpi-row">
         {labels.slice(0, 4).map((label, i) => (
@@ -232,13 +224,13 @@ export default function DashboardBlock({ data, query, explanation }) {
           </div>
         </ChartCard>
 
-        {activeChart === 'bar' && (
+        {/* {activeChart === 'bar' && (
           <ChartCard title="Share Distribution" subtitle="Proportional view" delay={200}>
             <div className="chart-canvas-wrap">
               <Doughnut data={chartData} options={PIE_OPTS} />
             </div>
           </ChartCard>
-        )}
+        )} */}
 
         {(activeChart === 'pie' || activeChart === 'doughnut') && (
           <ChartCard title="Comparison View" subtitle="Absolute values" delay={200}>
