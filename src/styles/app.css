@@ -803,3 +803,61 @@
   border-top: 1px solid var(--border);
   background: var(--bg1);
 }
+.upload-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 10, 25, 0.9);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.upload-box {
+  width: 360px;
+  padding: 24px;
+  border-radius: 16px;
+  background: #0f172a;
+  text-align: center;
+  color: white;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #1f2937;
+  border-top: 3px solid #6366f1;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.bar {
+  height: 8px;
+  background: #1f2937;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.success-icon {
+  font-size: 40px;
+  color: #22c55e;
+}

@@ -68,7 +68,7 @@ export function useDashboard() {
 
       if (alreadySaved) {
         backendRoomIdRef.current = alreadySaved;
-        // console.log(`♻️ Kept: ${alreadySaved} for ${currentRoomIdRef.current}`);
+
         const freshKey = getStoredGeminiKey();
         if (freshKey) {
           try { await setRoomConfig(alreadySaved, freshKey); }
@@ -79,8 +79,6 @@ export function useDashboard() {
 
       localStorage.setItem(storageKey, backendRoomId);
       backendRoomIdRef.current = backendRoomId;
-      // console.log(`✅ Saved: ${backendRoomId} for ${currentRoomIdRef.current}`);
-
       const freshKey = getStoredGeminiKey();
       if (freshKey) {
         try { await setRoomConfig(backendRoomId, freshKey); }
@@ -115,7 +113,6 @@ export function useDashboard() {
     setMessages(getRoomById(roomId)?.messages || []);
     const savedBackendId = localStorage.getItem(`ws_room_${roomId}`);
     backendRoomIdRef.current = savedBackendId || null;
-    // console.log(`🔄 Switch: ${roomId} → backend: ${savedBackendId}`);
   }, [setRoom]);
 
   const newChat = useCallback(async () => {

@@ -161,17 +161,18 @@ export function useWebSocket({
       }
 
       // Dashboard/chart
-      if (data?.type === "dashboard" || data?.chart_data || data?.labels) {
-        const chartPayload = data.chart_data || data.data || data;
+      if (data?.type === "chart" || data?.data?.chart_type) {
+        const chart = data.data;
+
         const room = addMessage(roomId, {
           role: "assistant",
           type: "dashboard",
-          data: chartPayload,
+          data: chart,
           query: lastQueryRef.current,
-          explanation: data.explanation || data.text || "",
-          content: data.explanation || data.text || "",
+          explanation: data.explanation || "",
           ts: Date.now(),
         });
+
         if (room) onNewMessage(room.messages);
         return;
       }
