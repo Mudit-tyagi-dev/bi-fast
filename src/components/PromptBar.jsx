@@ -9,7 +9,7 @@ const STATUS_LABEL = {
   [WS_STATUS.ERROR]: { label: "WS Error", cls: "ws-error" },
 };
 
-const MODELS_URL = "https://biz-dash-backend.onrender.com/config/models%7D";
+const MODELS_URL = "https://biz-dash-backend.onrender.com/config/models";
 
 export default function PromptBar({
   onSend,
