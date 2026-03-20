@@ -3,7 +3,7 @@ import "./styles/global.css";
 import "./styles/app.css";
 import { useDashboard } from "./hooks/useDashboard";
 import Sidebar from "./components/Sidebar";
-import SettingsModal from "./components/SettingsModal";
+import SettingsModal from "./components/SettingsModal.jsx";
 import HomeTab from "./components/HomeTab";
 import ChatTab from "./components/ChatTab";
 import { getUsage, incrementUsage } from "./utils/chatStorage";
