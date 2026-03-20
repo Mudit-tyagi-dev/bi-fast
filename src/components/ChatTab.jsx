@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import PromptBar from "./PromptBar";
 import ChatMessages from "./ChatMessages";
 import DashboardBlock from "./dashboard";
-import "../styles/chatTAB.css";
+import "../styles/chatTAb.css";
 
 // ── Upload Modal ──
 function UploadModal({ onClose, uploadFile }) {
