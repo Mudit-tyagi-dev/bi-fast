@@ -163,6 +163,7 @@ export function useWebSocket({
           role: "assistant",
           type: "dashboard",
           data: chart,
+          id: data.data.id, 
           query: lastQueryRef.current,
            sql_query: data.sql_query,
           explanation: data.explanation || "",

@@ -861,3 +861,31 @@
   font-size: 40px;
   color: #22c55e;
 }
+.tb-dashboard-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--t1);
+  letter-spacing: -0.01em;
+}
+
+.tb-dashboard-title svg {
+  color: var(--accent2);
+  opacity: 0.8;
+}
+.compare-btn {
+  background: rgba(108,99,255,0.08);
+  border-color: rgba(108,99,255,0.2);
+  color: var(--accent2);
+}
+.compare-btn:hover {
+  background: rgba(108,99,255,0.15);
+  border-color: rgba(108,99,255,0.4);
+}
+.compare-btn.active {
+  background: rgba(108,99,255,0.15);
+  border-color: rgba(108,99,255,0.4);
+  color: var(--accent2);
+}

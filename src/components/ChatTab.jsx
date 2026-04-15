@@ -294,15 +294,18 @@ export default function ChatTab({
   roomFile,
   chatOpen,
   onToggleChat,
-  deleteChart,
+  
+  compareOpen,
+  onOpenCompare,
+  onCloseCompare,
 }) {
   const hasCharts = messages.some(
     (m) => m.type === "dashboard" && m.data?.chart_type,
   );
   const [chatWidth, setChatWidth] = useState(340);
   const [dragging, setDragging] = useState(false);
-  const [showUpload, setShowUpload] = useState(false);
-  const [compareOpen, setCompareOpen] = useState(false);
+    const [showUpload, setShowUpload] = useState(false); // ← ADD
+
 
   const startDrag = useCallback(
     (e) => {
@@ -343,9 +346,8 @@ export default function ChatTab({
               <DashboardBlock
                 messages={messages}
                 compareOpen={compareOpen}
-                onOpenCompare={() => setCompareOpen(true)}
-                onCloseCompare={() => setCompareOpen(false)}
-                 onDeleteChart={deleteChart}
+                onOpenCompare={onOpenCompare}
+                onCloseCompare={onCloseCompare}
               />
             ) : (
               <div className="split-no-charts">

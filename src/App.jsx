@@ -29,14 +29,15 @@ export default function App() {
     roomFile,
     backendRoomId,
     isCreatingRoom,
-    deleteChart ,
+    deleteChart,
   } = useDashboard();
 
   const [activeNav, setActiveNav] = useState("home");
   const [mode, setMode] = useState("query");
   const [usage, setUsage] = useState(getUsage());
   const [chatOpen, setChatOpen] = useState(false);
-  
+  const [compareOpen, setCompareOpen] = useState(false); // ← ADD
+
   const [theme, setTheme] = useState(
     () => localStorage.getItem("pb_theme") || "dark",
   );
@@ -141,7 +142,6 @@ export default function App() {
       <ChatTab
         messages={messages}
         deleteChart={deleteChart}
-
         streamingText={streamingText}
         isStreaming={isStreaming}
         wsStatus={wsStatus}
@@ -156,6 +156,9 @@ export default function App() {
         roomFile={roomFile}
         chatOpen={chatOpen}
         onToggleChat={() => setChatOpen((p) => !p)}
+        compareOpen={compareOpen}
+        onOpenCompare={() => setCompareOpen(true)}
+        onCloseCompare={() => setCompareOpen(false)}
       />
     );
   }
@@ -197,25 +200,66 @@ export default function App() {
 
       <div className="main">
         <div className="topbar">
-          <div className="tb-left" />
-          <div className="tb-right">
+          <div className="tb-left">
+            {/* Sirf chat tab pe dikhao */}
             {activeNav === "chat" && (
-              <button
-                className={`tb-btn chat-toggle-btn ${chatOpen ? "active" : ""}`}
-                onClick={() => setChatOpen((p) => !p)}
-              >
+              <div className="tb-dashboard-title">
                 <svg
-                  width="13"
-                  height="13"
+                  width="14"
+                  height="14"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                 >
-                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
                 </svg>
-                {chatOpen ? "Hide AI Chat" : "AI Chat"}
-              </button>
+                Dashboard
+              </div>
+            )}
+          </div>
+          <div className="tb-right">
+            {activeNav === "chat" && (
+              <>
+                <button
+                  className={`tb-btn chat-toggle-btn ${chatOpen ? "active" : ""}`}
+                  onClick={() => setChatOpen((p) => !p)}
+                >
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                  </svg>
+                  {chatOpen ? "Hide AI Chat" : "AI Chat"}
+                </button>
+
+                {/* Compare btn */}
+                <button
+                  className={`tb-btn compare-btn ${compareOpen ? "active" : ""}`}
+                  onClick={() => setCompareOpen((p) => !p)}
+                >
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <rect x="3" y="3" width="7" height="18" rx="1" />
+                    <rect x="14" y="3" width="7" height="18" rx="1" />
+                  </svg>
+                  {compareOpen ? "Dashboard" : "Compare"}
+                </button>
+              </>
             )}
 
             <button className="tb-btn" onClick={handleExport}>
